@@ -1,33 +1,28 @@
 * {
-  padding: 0px;
-  margin: 0px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+    padding: 0px;
+    margin: 0px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
 #stage {
-  position: relative;
-  width: 375px;
-  height: 350px;
-  /*margin: 1px auto;*/
+    position: relative;
+    width: 375px;
+    height: 350px;
+    margin: 1px auto;
 }
 
 body {
     cursor: pointer;
+    background-color: #74748f;
 }
 
 canvas {
-  display: block;
-  position: absolute;
-  width: 125px;
-  height: 175px;
-
-/*
-  -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
-	-moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
-	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
-*/
+    display: block;
+    position: absolute;
+    width: 125px;
+    height: 175px;
 
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -37,14 +32,20 @@ canvas {
 }
 
 @font-face {
-  font-family: Vanilla;
-  src: url("SuperMario256.ttf");
+    font-family: Vanilla;
+    src: url("SuperMario256.ttf");
+}
+
+#div {
+    height: 10px;
 }
 
 p {
-  font-family: Vanilla;
-  font-size: 20px;
-  padding: 20px;
+    font-family: Vanilla;
+    font-size: 20px;
+    padding: 50px;
+    text-align: center;
+    line-height: 10px;
 
 }
 

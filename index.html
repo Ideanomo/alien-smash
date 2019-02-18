@@ -7,7 +7,7 @@
 <div id="stage">
     <img src="startScreen.png">
 </div>
-<p id="output"></p>
+    <p id="output"></p>
 
 <script>
 window.addEventListener("click", clickHandler, false);
@@ -221,6 +221,7 @@ function playGame() {
                 stage.appendChild(canvas);
                 canvas.style.top = row * (alien.HEIGHT + SPACE) + "px";
                 canvas.style.left = column * (alien.WIDTH + SPACE) + "px";
+
                 canvas.addEventListener("mousedown", mousedownHandler, false);
                 alienCanvases.push(canvas);
 
