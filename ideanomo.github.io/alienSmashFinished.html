@@ -1,0 +1,313 @@
+<!doctype html>
+<head>
+    <title>Alien Smash Finished</title>
+    <link rel="stylesheet" href="alienSmash.css">
+</head>
+<body>
+<div id="stage">
+    <img src="startScreen.png">
+</div>
+<p id="output"></p>
+
+<script>
+window.addEventListener("click", clickHandler, false);
+
+function clickHandler() {
+    var ele = document.querySelector("img");
+    ele.parentNode.removeChild(ele);
+    playGame();
+}
+
+
+
+function playGame() {
+    // Remove click events on window
+    window.removeEventListener("click", clickHandler, false);
+
+    /*
+    *   The gameTimer object
+     */
+    var gameTimer = {
+        time: 0,
+        interval: undefined,
+
+        start: function() {
+            var self = this;
+            this.interval = setInterval(function(){self.tick();}, 1000);
+        },
+        tick: function() {
+            this.time--;
+        },
+        stop: function() {
+            clearInterval(this.interval);
+        },
+        reset: function() {
+            this.time = 0;
+        }
+    };
+
+    /*
+    *   The alien object
+     */
+
+    var alien = {
+        //The size of each frame on the tile sheet
+        //and the tile sheet's number of columns
+        IMAGE: "alienSmash_half.png",
+        WIDTH: 125,
+        HEIGHT: 175,
+        COLUMNS: 3,
+
+        //The numbers of the animation frames and the starting frame
+        numberOfFrames: 5,
+        currentFrame: 0,
+
+        //Properties of the animation frame's x and
+        //y positions on the tile sheet.
+        //They're 0 when this object first loads
+        sourceX: 0,
+        sourceY: 0,
+
+        //A property to control the loop
+        forward: true,
+
+        //States
+        HIDING: 0,
+        JUMPING: 1,
+        HIT: 2,
+        state: this.HIDING,
+
+        //Properties needed to help reset the animation
+        timeToReset: 9,
+        resetCounter: 0,
+
+        //A property to store the random time
+        waitTime: undefined,
+
+        //A method to find a random animation time
+        findWaitTime: function() {
+            this.waitTime = Math.ceil(Math.random() * 60);
+        },
+
+        //The alien's updateAnimation method
+        updateAnimation: function() {
+            this.sourceX = Math.floor(this.currentFrame % this.COLUMNS) * this.WIDTH;
+            this.sourceY = Math.floor(this.currentFrame / this.COLUMNS) * this.HEIGHT;
+
+            //Figure out the alien's state
+            if(this.state !== this.HIT) {
+                if(this.waitTime > 0  || this.waitTime === undefined)
+                {
+                    this.state = this.HIDING;
+                }
+                else
+                {
+                    this.state = this.JUMPING;
+                }
+            }
+
+            //Change the behaviour of the animation based on the state
+            switch(this.state) {
+                case this.HIDING:
+                    this.currentFrame = 0;
+                    this.waitTime--;
+                    break;
+
+                case this.JUMPING:
+                    //If the last frame has been reached, set forward to false
+                    if(this.currentFrame === this.numberOfFrames) {
+                        this.forward = false;
+                    }
+
+                    //If the first frame has been reached, set forward to true
+                    if(this.currentFrame === 0 && this.forward === false) {
+                        //Set forward to true, find a new waitTime,
+                        //set the state to HIDING and break the switch statement
+                        this.forward = true;
+                        this.findWaitTime();
+                        this.state = this.HIDING;
+                        break;
+                    }
+
+                    //Add 1 to currentFrame if forward is true, subtract 1 if it's false
+                    if(this.forward) {
+                        this.currentFrame++;
+                    }
+                    else {
+                        this.currentFrame--;
+                    }
+                    break;
+
+                case this.HIT:
+                    //Set the current frame to the last one on the tilesheet
+                    //to display the explosion image
+                    this.currentFrame = 6;
+
+                    //Update the resetCounter by 1
+                    this.resetCounter++;
+
+                    //Reset the animation if the resetCounter equals the timeToReset
+                    if(this.resetCounter === this.timeToReset) {
+                        this.state = this.HIDING;
+                        this.forward = true;
+                        this.currentFrame = 0;
+                        this.resetCounter = 0;
+                        this.findWaitTime();
+                    }
+                    break;
+            }
+        }
+    };
+
+/*
+*   The main program
+ */
+
+//Load the animation tile sheet
+    var image = new Image();
+    image.addEventListener("load", loadHandler, false);
+    image.src = alien.IMAGE;
+
+//The number of rows and columns
+//and the size of each cell
+    var ROWS = 2;
+    var COLUMNS = 3;
+    var HEIGHT = alien.HEIGHT;
+    var WIDTH =  alien.WIDTH;
+    var SPACE = 10;
+
+//Arrays for the aliens, their canvases
+//and their drawing surfaces
+    var alienObjects = [];
+    var alienCanvases = [];
+    var alienDrawingSurfaces = [];
+
+//Game variables
+    var aliensHit = 0;
+
+//Get a reference to the output
+    var output = document.querySelector("#output");
+
+    function loadHandler() {
+        //Plot the grid of aliens
+        buildMap();
+
+        //Start the game timer
+        gameTimer.time = 30;
+        gameTimer.start();
+
+        //Start the animation loop
+        updateAnimation();
+    }
+
+    function buildMap() {
+        for(var row = 0; row < ROWS; row++) {
+            for(var column = 0; column < COLUMNS; column++) {
+
+                //Create a single new alien object,
+                //Give it a random time, display its
+                //first frame and push it into an array
+                var newAlienObject = Object.create(alien);
+                newAlienObject.findWaitTime();
+                alienObjects.push(newAlienObject);
+
+                //Create a canvas tag for each alien
+                //and add it to the <div id="stage"> tag,
+                //position it, add a mousedown listener
+                //and push it into an array
+                var canvas = document.createElement("canvas");
+                canvas.setAttribute("width", alien.WIDTH);
+                canvas.setAttribute("height", alien.HEIGHT);
+                stage.appendChild(canvas);
+                canvas.style.top = row * (alien.HEIGHT + SPACE) + "px";
+                canvas.style.left = column * (alien.WIDTH + SPACE) + "px";
+                canvas.addEventListener("mousedown", mousedownHandler, false);
+                alienCanvases.push(canvas);
+
+                //Create a drawing surface and push
+                //it into the drawingSurfaces array
+                var drawingSurface = canvas.getContext("2d");
+                alienDrawingSurfaces.push(drawingSurface);
+            }
+        }
+    }
+
+    function updateAnimation() {
+        //Call updateAnimation every 120 milliseconds
+        //while the timer is greater than zero.
+        if(gameTimer.time > 0) {
+            setTimeout(updateAnimation, 83);
+        }
+
+        //Loop through all the aliens in
+        //the aliens array and call their
+        //updateAnimation methods
+        for(var i = 0; i < alienObjects.length; i++) {
+            alienObjects[i].updateAnimation();
+        }
+
+        //check for the end of the game
+        if(gameTimer.time === 0) {
+            endGame();
+        }
+
+        //Render the animation
+        render();
+    }
+
+    function endGame() {
+        //Stop the gameTimer
+        gameTimer.stop();
+
+        //Remove the mousedown event listeners from the
+        //canvas tags so that they can't be clicked
+        for(var i = 0; i < alienCanvases.length; i++) {
+            var canvas = alienCanvases[i];
+            canvas.removeEventListener("mousedown", mousedownHandler, false);
+        }
+    }
+
+    function mousedownHandler(event) {
+        //Find out which canvas was clicked
+        var theCanvasThatWasClicked = event.target;
+
+        //Search the alienCanvases array for a
+        //canvas that matches the one that's
+        //been clicked
+        for(var i = 0; i < alienCanvases.length; i++) {
+            if(alienCanvases[i] === theCanvasThatWasClicked) {
+                var alien = alienObjects[i];
+                if(alien.state === alien.JUMPING) {
+                    alien.state = alien.HIT;
+                    aliensHit++;
+                }
+            }
+        }
+    }
+
+    function render() {
+        for(var i = 0; i < alienObjects.length; i++) {
+            //Get reference to the current alien and drawing surface
+            var alien = alienObjects[i];
+            var drawingSurface = alienDrawingSurfaces[i];
+
+            //Clear the current alien's canvas
+            drawingSurface.clearRect(0, 0, alien.WIDTH, alien.HEIGHT);
+
+            //Draw the alien's current animation frame
+            drawingSurface.drawImage (
+            image,
+            alien.sourceX, alien.sourceY, alien.HEIGHT, alien.HEIGHT,
+            0, 0, alien.HEIGHT, alien.HEIGHT
+            );
+        }
+
+        //Display the output
+        output.innerHTML
+        = "Aliens smashed: " + aliensHit
+        + ", Time left: " + gameTimer.time;
+    }
+}
+
+</script>
+</body>
