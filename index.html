@@ -259,6 +259,7 @@ function playGame() {
     }
 
     function endGame() {
+
         //Stop the gameTimer
         gameTimer.stop();
 
@@ -268,6 +269,8 @@ function playGame() {
             var canvas = alienCanvases[i];
             canvas.removeEventListener("mousedown", mousedownHandler, false);
         }
+
+
     }
 
     function mousedownHandler(event) {
@@ -309,6 +312,10 @@ function playGame() {
         output.innerHTML
         = "Aliens smashed: " + aliensHit
         + ", Time left: " + gameTimer.time;
+
+        if(endGame && gameTimer.time === 0) {
+            output.innerHTML += "<br>" + " Game Over";
+        }
     }
 }
 
