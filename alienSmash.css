@@ -18,6 +18,12 @@ body {
     background-color: #74748f;
 }
 
+img#titleScreen {
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
+
 canvas {
     display: block;
     position: absolute;
