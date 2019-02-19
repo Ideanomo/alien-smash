@@ -4,22 +4,35 @@
     <link rel="stylesheet" href="alienSmash.css">
 </head>
 <body>
-<div>
-    <img  id="titleScreen" src="startScreen.png">
-</div>
-<div id="stage">
-</div>
-    <p id="output"></p>
 
 <script>
-window.addEventListener("click", clickHandler, false);
+
+window.onload = function() {
+
+    var titleScreen = new Image();
+    titleScreen.src = "startScreen.png";
+    titleScreen.setAttribute("id", "titleScreen");
+
+    var setImage = document.createElement("div");
+
+    var setStage = document.createElement("div");
+    setStage.setAttribute("id", "stage");
+
+    var textOutput = document.createElement("p");
+    textOutput.setAttribute("id", "output");
+
+    document.body.append(titleScreen);
+    document.body.append(setStage);
+    document.body.append(textOutput);
+
+    titleScreen.addEventListener("click", clickHandler, false);
+}
 
 function clickHandler() {
     var ele = document.querySelector("img");
     ele.parentNode.removeChild(ele);
     playGame();
 }
-
 
 
 function playGame() {
@@ -82,6 +95,8 @@ function playGame() {
         //Properties needed to help reset the animation
         timeToReset: 9,
         resetCounter: 0,
+
+        restartGame: false,
 
         //A property to store the random time
         waitTime: undefined,
@@ -270,8 +285,10 @@ function playGame() {
             canvas.removeEventListener("mousedown", mousedownHandler, false);
         }
 
-
+        // Play again
+        restart();
     }
+
 
     function mousedownHandler(event) {
         //Find out which canvas was clicked
@@ -314,8 +331,26 @@ function playGame() {
         + ", Time left: " + gameTimer.time;
 
         if(endGame && gameTimer.time === 0) {
-            output.innerHTML += "<br>" + " Game Over";
+            output.innerHTML += "<br>" + " Game Over" + "<br>" + "<span>Try again</span>";
         }
+    }
+
+    function restart() {
+        if(!alien.restartGame) {
+            alien.restartGame = true;
+        }
+
+        output.addEventListener("click", clickRestartHandler, false);
+    }
+
+    function clickRestartHandler() {
+
+        //Remove game stage
+        var stage = document.getElementById("stage");
+        stage.parentNode.removeChild(stage);
+        output.parentNode.removeChild(output);
+
+        window.onload();
     }
 }
 
