@@ -42,6 +42,10 @@ canvas {
     src: url("SuperMario256.ttf");
 }
 
+#restart {
+    color: #ee498b;
+}
+
 #div {
     height: 10px;
 }

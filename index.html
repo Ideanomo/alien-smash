@@ -210,7 +210,7 @@ function playGame() {
         buildMap();
 
         //Start the game timer
-        gameTimer.time = 30;
+        gameTimer.time = 1;
         gameTimer.start();
 
         //Start the animation loop
@@ -331,7 +331,7 @@ function playGame() {
         + ", Time left: " + gameTimer.time;
 
         if(endGame && gameTimer.time === 0) {
-            output.innerHTML += "<br>" + " Game Over" + "<br>" + "<span>Try again</span>";
+            output.innerHTML += "<br>" + " Game Over" + "<br>" + "<span id='restart'>Try again</span>";
         }
     }
 
