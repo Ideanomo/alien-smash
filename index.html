@@ -228,7 +228,7 @@ function playGame () {
     }
 
     // updateAnimation function
-    function updateAnimation () {        
+    function updateAnimation () {
         // Call updateAnimation every 83 milliseconds, 12 times per second 
         // while the timer is greater than zero. 1000 ms = 1s
         if (timer.time > 0) {
@@ -299,29 +299,26 @@ function playGame () {
             );
         }
 
-        // Display the output
+        // Display the output 
         output.innerHTML =
         'Aliens smashed: ' + aliensHit 
         + ', Time left: ' + timer.time;
 
-        if (timer.time === 0) {
+        if (alien.restartGame && timer.time === 0) {
             output.innerHTML += '<br>' + ' Game Over' + '<br>' + '<span id="restart">Try again</span>';
         }
     }
 
     function restart () {
-        if (!alien.restartGame) {
-            alien.restartGame = ture;
+        if (alien.restartGame) {
+            output.addEventListener('click', function() {
+                // Remove game stage
+                stage.parentNode.removeChild(stage);
+                output.parentNode.removeChild(output);
+                window.onload();
+                alien.restartGame = false;
+            }, false);
         }
-        output.addEventListener('click', clickRestartHandler, false);
-    }
-
-    function clickRestartHandler () {
-        // Remove game stage
-        stage.parentNode.removeChild(stage);
-        output.parentNode.removeChild(output);
-
-        window.onload();
     }
 }
 
