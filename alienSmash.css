@@ -1,7 +1,7 @@
 * {
-    padding: 0px;
-    margin: 0px;
-    -webkit-user-select: none;
+    /* padding: 0px; */
+    /* margin: 0px; */
+    /* -webkit-user-select: none; */
     -moz-user-select: none;
     user-select: none;
 }
@@ -30,11 +30,11 @@ canvas {
     width: 125px;
     height: 175px;
 
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 
-	cursor: pointer;	
+    cursor: pointer;
 }
 
 @font-face {
@@ -58,7 +58,7 @@ p {
     height: 100px;
     padding-top: 20px;
     padding-bottom: 20px;
-
+    /* margin: 1px auto; */
 }
 
 h1 {
