@@ -302,7 +302,7 @@ function playGame () {
         // Display the output 
         output.innerHTML =
         'Aliens smashed: ' + aliensHit + ','
-        + '<span id="timer">' + ' Time left: ' + gameTimer.time + '</span>';
+        + '<span id="timer">' + ' Time left: ' + timer.time + '</span>';
 
         if (alien.restartGame && timer.time === 0) {
             output.innerHTML += '<br>' + ' Game Over' + '<br>' + '<span id="restart">Try again</span>';
